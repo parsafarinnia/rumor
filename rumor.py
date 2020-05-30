@@ -154,5 +154,5 @@ if __name__ == '__main__':
     # tweets='/Users/macbook/Desktop/reasearch/rumor/rumor/tweets.pickle'
     # combine_text_id_classification(tweets,classes,"train")
     # make_cvs(direct)
-
+    print("1")
     vs,x,y=vectorize('/Users/macbook/Desktop/reasearch/rumor/rumor/train_id_text_class.json')
