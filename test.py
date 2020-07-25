@@ -26,6 +26,6 @@ if __name__ == '__main__':
     # # stemmer
     # porter = PorterStemmer()
     # words = [porter.stem(word) for word in words]
-
+    a=2
 
     print(tokens)
