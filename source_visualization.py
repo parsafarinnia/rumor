@@ -56,17 +56,59 @@ def make_visualization_source_df(devdir,list_of_tweets):
             with open(tweets_dic[single_id]) as g:
                 data=json.load(g)
                 id_feature_class[single_id]={"classification":ids[single_id],"text":data['text'],"favorite_count":data['favorite_count'],"retweet_count":data['retweet_count'],"verified":data['user']['verified'],"followers":data['user']['followers_count']}
-    with open('test_id_feature_class.json', 'w') as fp:
+                if  "media" in data:
+                    id_feature_class[single_id]["media_type"]=data["media"][0]["media_type"]
+                    print("he")
+    with open('source_id_feature_class.json', 'w') as fp:
+        json.dump(id_feature_class, fp)
+    return id_feature_class
+def make_visualization_reply_df(devdir,list_of_tweets):
+    '''
+    iput:
+        dev dir: direction of dev wich has id-tag of source in subtask b
+        list_of_tweets: a list of id-address
+    output:
+        a json/df of id features and classification
+            id
+            text
+            media type
+            favorite_count
+            retweet_count
+            verified
+            followers
+
+    '''
+    id_feature_class={}
+    with open(devdir) as f:
+        ids = json.load(f)
+        tweets_dic=list_of_tweets
+        ids=ids["subtaskaenglish"]
+        for single_id in ids:
+            with open(tweets_dic[single_id]) as g:
+                data=json.load(g)
+                id_feature_class[single_id]={"classification":ids[single_id],"text":data['text'],"favorite_count":data['favorite_count'],"retweet_count":data['retweet_count'],"verified":data['user']['verified'],"followers":data['user']['followers_count']}
+                # if  "media" in data:
+                #     id_feature_class[single_id]["media_type"]=data["media"][0]["media_type"]
+                #     print("he")
+    with open('replies_id_feature_class.json', 'w') as fp:
         json.dump(id_feature_class, fp)
     return id_feature_class
 def test(dirname):
     list_of_files=get_file_path(dirname)
     return make_df(list_of_files)
 # structures, tweets=test("/Users/macbook/Desktop/reasearch/rumoureval2019/rumoureval-2019-training-data/twitter-english")
-# id_feature_class=make_visualization_source_df('/Users/macbook/Desktop/reasearch/rumoureval2019/rumoureval-2019-training-data/tweets-train-key.json',tweets)
-def make_panda_df(dir):
+# source_id_feature_class=make_visualization_source_df('/Users/macbook/Desktop/reasearch/rumoureval2019/rumoureval-2019-training-data/tweets-train-key.json',tweets)
+# make_visualization_reply_df('/Users/macbook/Desktop/reasearch/rumoureval2019/rumoureval-2019-training-data/tweets-train-key.json',tweets)
+def make_panda_df(dir,source_or_reply):
     '''
 
     :param dir: input address of json of id_feature_class.json
     :return: a pickle of pandafied dataframe of to visualize data
     '''
+    with open(dir) as inputjson:
+        data=json.load(inputjson)
+        data_pd=pd.DataFrame.from_dict(data)
+        output_address=source_or_reply+"df_id_feature_class.json"
+        output=data_pd.T.to_json(output_address)
+make_panda_df("source_id_feature_class.json","source")
+make_panda_df("replies_id_feature_class.json","replies")
